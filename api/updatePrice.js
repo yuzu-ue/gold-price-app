@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         console.log(`金価格($): ${goldPriceUSD}, ドル円: ${usdToJpy}`);
 
         // 円での最終価格を計算
-        const finalPrice = calculateJpyPrice(goldData, usdjpyData);
+        const finalPrice = calculateJpyPrice(goldPriceUSD, usdToJpy); 
         console.log(`計算結果(円): ${finalPrice}`);
 
         // 結果をキャッシュに保存
