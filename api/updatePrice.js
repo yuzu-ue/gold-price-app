@@ -1,18 +1,17 @@
 import { kv } from "@vercel/kv";
-import { fetchGoldPrice , fetchUsdJpyRate } from "../lib/apiClient.js";
+import { fetchGoldPrice, fetchUsdJpyRate } from "../lib/apiClient.js";
 import { calculateJpyPrice } from "../lib/calculator.js";
 
 export default async function handler(req, res) {
     try {
-
         // APIキーの取得
-        const goldKey = process.env.GOLD_API_KEY; // 金価格APIキー
-        const exchangeKey = process.env.EXCHANGE_API_KEY; // 為替APIキー
+        const goldKey = process.env.GOLD_API_KEY; 
+        const exchangeKey = process.env.EXCHANGE_API_KEY; 
 
         // 並行してAPIからデータを取得
         const [goldPriceUSD, usdToJpy] = await Promise.all([
             fetchGoldPrice(goldKey),
-            calculateJpyPrice(exchangeKey)
+            fetchUsdJpyRate(exchangeKey)
         ]);
         
         console.log(`金価格($): ${goldPriceUSD}, ドル円: ${usdToJpy}`);
