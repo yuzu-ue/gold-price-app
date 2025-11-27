@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         // 並行してAPIからデータを取得
         const [goldPriceUSD, usdToJpy] = await Promise.all([
             fetchGoldPrice(goldKey),
-            fetchUsdJptRate(exchangeKey)
+            calculateJpyPrice(exchangeKey)
         ]);
         
         console.log(`金価格($): ${goldPriceUSD}, ドル円: ${usdToJpy}`);
