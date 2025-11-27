@@ -14,9 +14,10 @@ export default async function handler(req, res) {
         const usdjpyRes = await fetch(`http://api.exchangeratesapi.io/v1/latest?access_key=${exchangeKey}`);
         const usdjpyData = await usdjpyRes.json();
         console.log("USDJPY Data:", usdjpyData);
+        return res.status(200).json({ message: "ログを見てね！" });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'サーバーエラーが発生しました' });
+        console.error("🔥 エラー発生！:", error);
+        return res.status(500).json({ error: error.message });
     }
 }
