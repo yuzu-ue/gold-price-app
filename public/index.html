@@ -2,10 +2,89 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>テスト</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日の金価格</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .card {
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 { margin: 0 0 1rem 0; font-size: 1.5rem; color: #555; }
+        .price-container { margin: 1.5rem 0; }
+        .price-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #d4af37; /* ゴールド色 */
+        }
+        .currency { font-size: 1.5rem; margin-left: 0.5rem; }
+        .loading { color: #999; font-size: 1.2rem; }
+        .error { color: #e74c3c; }
+    </style>
 </head>
 <body>
-    <h1>Hello Vercel! 👋</h1>
-    <p>ちゃんとデプロイできたかテスト中です。</p>
+    <div class="card">
+        <h1>今日の金価格 (税込/g)</h1>
+        
+        <div class="price-container">
+            <div id="price-display" class="loading">読み込み中...</div>
+        </div>
+
+        <p style="font-size: 0.8rem; color: #999;">
+            ※価格は市場状況により変動します。<br>
+            (Powered by Vercel & Node.js BFF)
+        </p>
+    </div>
+
+    <script>
+        // ページが読み込まれたら自動で実行
+        window.addEventListener('DOMContentLoaded', async () => {
+            const priceDisplayElement = document.getElementById('price-display');
+
+            try {
+                // 1. あなたが作った最強のAPIを叩く！
+                const response = await fetch('/api/getPrice');
+
+                // 2. もしAPIがエラーを返したら
+                if (!response.ok) {
+                    throw new Error(`APIエラー: ${response.status}`);
+                }
+
+                // 3. データ(JSON)を受け取る
+                const data = await response.json();
+                
+                // 4. 価格を取り出す
+                const price = data.latestPrice;
+
+                // 5. 画面を書き換える！
+                // (toLocaleString() は数字を「11,041」みたいにカンマ区切りにしてくれる便利機能)
+                priceDisplayElement.innerHTML = `
+                    <span class="price-value">${price.toLocaleString()}</span>
+                    <span class="currency">円</span>
+                `;
+                // クラスを入れ替えてデザインを適用
+                priceDisplayElement.classList.remove('loading');
+
+            } catch (error) {
+                // エラーが起きたら画面に表示する
+                console.error('取得失敗:', error);
+                priceDisplayElement.textContent = '価格の取得に失敗しました。';
+                priceDisplayElement.classList.remove('loading');
+                priceDisplayElement.classList.add('error');
+            }
+        });
+    </script>
 </body>
 </html>
