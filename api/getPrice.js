@@ -14,7 +14,20 @@ export default async function handler(req, res) {
         const usdjpyRes = await fetch(`http://api.exchangeratesapi.io/v1/latest?access_key=${exchangeKey}`);
         const usdjpyData = await usdjpyRes.json();
         console.log("USDJPY Data:", usdjpyData);
-        return res.status(200).json({ message: "ログを見てね！" });
+
+        let goldPriceUSD = goldData.close;
+        if (goldPriceUSD  === 'NA') {
+            console.log("金価格が利用不可のため仮の価格を表示します。");
+            goldPriceUSD = 2000; // 仮の価格
+        }
+
+        let usdToJpy = usdjpyData.rates.JPY / usdjpyData.rates.USD; // USDからJPYへの為替レート取得
+        let glamPiceJPY = (goldPriceUSD / 31.1035) * usdToJpy // グラム単位に変換
+        let goldTaxPriceJPY = glamPiceJPY * 1.1; // 10%の消費税を加算
+        let finalPrice = Math.floor(goldTaxPriceJPY); // 最終価格を四捨五入
+
+        await kv.set('latestPrice', finalPrice);
+        return res.status(200).json({ price: finalPrice });
 
     } catch (error) {
         console.error("🔥 エラー発生！:", error);
