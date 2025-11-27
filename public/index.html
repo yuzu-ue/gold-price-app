@@ -69,7 +69,6 @@
                 const price = data.price;
 
                 // 5. 画面を書き換える！
-                // (toLocaleString() は数字を「11,041」みたいにカンマ区切りにしてくれる便利機能)
                 priceDisplayElement.innerHTML = `
                     <span class="price-value">${price.toLocaleString()}</span>
                     <span class="currency">円</span>
