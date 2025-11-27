@@ -55,7 +55,7 @@
 
             try {
                 // 1. あなたが作った最強のAPIを叩く！
-                const response = await fetch('/api/getPrice');
+                const response = await fetch('/api/updatePrice.js');
 
                 // 2. もしAPIがエラーを返したら
                 if (!response.ok) {
@@ -67,7 +67,6 @@
                 
                 // 4. 価格を取り出す
                 const price = data.price;
-
                 // 5. 画面を書き換える！
                 priceDisplayElement.innerHTML = `
                     <span class="price-value">${price.toLocaleString()}</span>
