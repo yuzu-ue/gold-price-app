@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv";
-import { fetchGoldPrice , fetchUsdJytRate } from "../lib/apiClient.js";
+import { fetchGoldPrice , fetchUsdJpyRate } from "../lib/apiClient.js";
 import { calculateJpyPrice } from "../lib/calculator.js";
 
 export default async function handler(req, res) {
